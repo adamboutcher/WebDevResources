@@ -172,8 +172,7 @@ if (!empty($_GET['ssi'])) {
 					<li><a href="http://getbootstrap.com">Bootstrap</a></li>
 					<li><a href="http://purecss.io">Pure</a></li>
 					<li><a href="http://html5boilerplate.com">HTML5 Boilerplate</a></li>
-					<li><a href="http://www.colorzilla.com/gradient-editor/">CSS3 Gradient Generator</a></li>
-					<li><a href="http://css3gen.com/box-shadow/">CSS3 Box Shadow Generator</a></li>
+					<li><a href="http://www.cssmatic.com/">CSSmatic</a></li>
 				</ul>
 				<small class="muted">Javascript</small>
 				<ul class="unstyled">
@@ -263,6 +262,7 @@ if (!empty($_GET['ssi'])) {
 					<li><a href="http://livereload.com">Live Reload</a></li>
 					<li><a href="http://mhs.github.io/scout-app">SCOUT App</a></li>
 					<li><a href="http://alphapixels.com/prepros/">Prepros</a> (CodeKit Clone)</li>
+					<li><a href="http://www.avast.com/get/7GkpGGur">Avast Anti-Virus</a></li>
 				</ul>
 			</div>
 			
@@ -270,10 +270,10 @@ if (!empty($_GET['ssi'])) {
 		<div class="row-fluid">
 			<div class="span4 hashes">
 				<h4>Hashes</h4>
-				<small class="muted">Don't use for passwords!</small><br/>
 				<form>
 					<input type="text" id="hinput" style="margin-bottom:0;"/> <a class="btn" id="hbtn"><i class="icon-refresh"></i></a>
 				</form>
+				<small class="muted">Don't use for passwords!</small>
 				<div><strong>Input:</strong> <span id="hval"></span></div>
 				<div><strong>MD5:</strong> <span id="hmd5"></span></div>
 				<div><strong>SHA1:</strong> <span id="hsh1"></span></div>
@@ -281,13 +281,17 @@ if (!empty($_GET['ssi'])) {
 			</div>
 			<div class="span4 hashes">
 				<h4>String Tools</h4>
-				<small class="muted">Don't use for passwords!</small><br/>
 				<form>
 					<input type="text" id="sinput" style="margin-bottom:0;"/> <a class="btn" id="sbtn"><i class="icon-refresh"></i></a>
 				</form>
 				<div><strong>Input:</strong> <span id="sval"></span></div>
 				<div><strong>Length:</strong> <span id="slen"></span></div>
 				<div><strong>Reverse:</strong> <span id="srev"></span></div>
+			</div>
+			<div class="span4 hashes">
+				<h4>Other Info</h4>
+				<div><strong>Window Res:</strong> <span id="height"></span> x <span id="width"></span></div>
+				<div><strong>JS KeyCode:</strong> <span id="keycode"></span></div>
 			</div>
 			<div class="span4 hashes">
 
@@ -303,11 +307,12 @@ if (!empty($_GET['ssi'])) {
 				</a>
 			</div>
 			<div class="span6 text-right">
-				<strong>Updated:</strong> <em>May 2013</em><br/>
+				<strong>Updated:</strong> <em>July 2013</em><br/>
 				<a href="http://www.webdesignrepo.com/">Web Design Repo</a> &amp; <a href="http://www.aboutcher.co.uk">Adam Boutcher</a>
 			</div>
 		</div>
 	</footer>
+
 	<!-- JS -->
 	<script type="text/javascript" src="assets/js/jquery-bootstrap-combined.min.js"></script>
 	<script type="text/javascript">
@@ -332,6 +337,13 @@ if (!empty($_GET['ssi'])) {
 		}
 		$('#hbtn').click(function(){gethash($('#hinput').val());});$('#hinput').keyup(function(){ gethash($(this).val()); });
 		$('#sbtn').click(function(){getstr($('#sinput').val());});$('#sinput').keyup(function(){ getstr($(this).val()); });
+		$(document).ready(function(){ $("#height").html($(window).height()+"px"); $("#width").html($(window).width()+"px"); });
+		$(window).resize(function(){ $("#height").html($(window).height()+"px"); $("#width").html($(window).width()+"px"); });
+
+		var d = document,k = d.getElementById('keycode');
+		d.onkeydown = d.body.onkeydown = function(e) { e = e || window.event; k.innerHTML = e.keyCode || e.which; return false; }
+
+
 	</script>
 </body>
 </html>
