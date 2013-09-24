@@ -158,6 +158,10 @@ if (!empty($_GET['ssi'])) {
 					<li><a href="http://glyphicons.com">Glyphicons</a></li>
 					<li><a href="http://one-div.com">One div</a></li>
 				</ul>
+				<small class="muted">Textures</small>
+				<ul class="unstyled">
+					<li><a href="http://subtlepatterns.com">SubtlePatterns</a></li>
+				</ul>
 			</div>
 			
 
@@ -219,6 +223,7 @@ if (!empty($_GET['ssi'])) {
 					<li><a href="http://caniuse.com">Can I Use</a></li>
 					<li><a href="http://browsershots.org/">Browsershots</a></li>
 					<li><a href="http://ctrlq.org/screenshots">Web Screenshots</a></li>
+					<li><a href="http://www.mail-tester.com">Email SPAM Testing</a></li>
 				</ul>
 				<small class="muted">Google</small>
 				<ul class="unstyled">
@@ -233,9 +238,9 @@ if (!empty($_GET['ssi'])) {
 				<h4>Docs</h4>
 				<small class="muted">HTML</small>
 				<ul class="unstyled">
-					<li><a href="http://www.w3.org/TR/">W3C Specs</a></li>
 					<li><a href="http://developer.mozilla.org">Mozilla Dev. Network</a></li>
 					<li><a href="http://www.webplatform.org/">Web Platform Docs</a></li>
+					<li><a href="http://www.w3.org/TR/">W3C Specs</a></li>
 				</ul>
 				<small class="muted">Socal Networks</small>
 				<ul class="unstyled">
@@ -271,7 +276,7 @@ if (!empty($_GET['ssi'])) {
 			<div class="span4 hashes">
 				<h4>Hashes</h4>
 				<form>
-					<input type="text" id="hinput" style="margin-bottom:0;"/> <a class="btn" id="hbtn"><i class="icon-refresh"></i></a>
+					<input type="text" id="hinput" style="margin-bottom:0;" placeholder="String to Hash..."/> <a class="btn" id="hbtn"><i class="icon-refresh"></i></a>
 				</form>
 				<small class="muted">Don't use for passwords!</small>
 				<div><strong>Input:</strong> <span id="hval"></span></div>
@@ -282,7 +287,7 @@ if (!empty($_GET['ssi'])) {
 			<div class="span4 hashes">
 				<h4>String Tools</h4>
 				<form>
-					<input type="text" id="sinput" style="margin-bottom:0;"/> <a class="btn" id="sbtn"><i class="icon-refresh"></i></a>
+					<input type="text" id="sinput" style="margin-bottom:0;" placeholder="String Tools..."/> <a class="btn" id="sbtn"><i class="icon-refresh"></i></a>
 				</form>
 				<div><strong>Input:</strong> <span id="sval"></span></div>
 				<div><strong>Length:</strong> <span id="slen"></span></div>
@@ -290,8 +295,17 @@ if (!empty($_GET['ssi'])) {
 			</div>
 			<div class="span4 hashes">
 				<h4>Other Info</h4>
-				<div><strong>Window Res:</strong> <span id="height"></span> x <span id="width"></span></div>
-				<div><strong>JS KeyCode:</strong> <span id="keycode"></span></div>
+				<form>
+					<input type="password" id="pinput" style="margin-bottom:0;" placeholder="Password Strength..."/> <a class="btn" id="pbtn"><i class="icon-eye-open"></i></a>
+				</form>
+				<div class="progress" style="width:70%;">
+					<div id="password_strength_bar" class="bar">Strength Meter</div>
+				</div>
+				<div>
+					<strong>Est. Time to Crack:</strong> <span id="pass_time_to_crack"></span>
+				</div>
+				<div><strong>Window Res:</strong> <span id="width"></span> x <span id="height"></span></div>
+				<!--<div><strong>JS KeyCode:</strong> <span id="keycode"><em>Disabled</em></span></div>-->
 			</div>
 			<div class="span4 hashes">
 
@@ -307,8 +321,8 @@ if (!empty($_GET['ssi'])) {
 				</a>
 			</div>
 			<div class="span6 text-right">
-				<strong>Updated:</strong> <em>July 2013</em><br/>
-				<a href="http://www.webdesignrepo.com/">Web Design Repo</a> &amp; <a href="http://www.aboutcher.co.uk">Adam Boutcher</a>
+				<strong>Updated:</strong> <em>September 2013</em><br/>
+				<a href="http://www.aboutcher.co.uk">Adam Boutcher</a>
 			</div>
 		</div>
 	</footer>
@@ -316,6 +330,7 @@ if (!empty($_GET['ssi'])) {
 	<!-- JS -->
 	<script type="text/javascript" src="assets/js/jquery-bootstrap-combined.min.js"></script>
 	<script type="text/javascript">
+		(function(){var a;a=function(){var a,b;b=document.createElement("script");b.src="/assets/js/zxcvbn.min.js";b.type="text/javascript";b.async=!0;a=document.getElementsByTagName("script")[0];return a.parentNode.insertBefore(b,a)};null!=window.attachEvent?window.attachEvent("onload",a):window.addEventListener("load",a,!1)}).call(this);
 		function gethash(value) {
 			$.getJSON("<?PHP echo $_SERVER['PHP_SELF']; ?>?ssi=hash&value="+value, function(data){  
     			$.each(data, function(i,j) { 
@@ -340,9 +355,31 @@ if (!empty($_GET['ssi'])) {
 		$(document).ready(function(){ $("#height").html($(window).height()+"px"); $("#width").html($(window).width()+"px"); });
 		$(window).resize(function(){ $("#height").html($(window).height()+"px"); $("#width").html($(window).width()+"px"); });
 
-		var d = document,k = d.getElementById('keycode');
-		d.onkeydown = d.body.onkeydown = function(e) { e = e || window.event; k.innerHTML = e.keyCode || e.which; return false; }
+		$('#pbtn').click(function(){
+			if ($("#pinput").attr('type') == "text" ) {
+				$("#pinput").attr('type', 'password');$('#pbtn i').removeClass("icon-eye-close").addClass("icon-eye-open");
+			} else {
+				$("#pinput").attr('type', 'text');$('#pbtn i').removeClass("icon-eye-open").addClass("icon-eye-close");
+			}
+		});
 
+		$("#pinput").bind("propertychange input paste", function() {
+			$("#weak_password_error").hide()
+			var pass = $("#pinput").val();
+			if (pass == "") {
+				$("#password_strength_bar").css("width", "0%")
+				$("#pass_time_to_crack").text("")
+				$("#password_strength").val(0)
+			} else {
+				var strength = zxcvbn(pass, "");
+				$("#password_strength_bar").css("width", (strength.score * 25) + "%")
+				$("#password_strength").val(strength.score)
+				$("#pass_time_to_crack").text(strength.crack_time_display)
+			}
+		}); 
+
+		//var d = document,k = d.getElementById('keycode');
+		//d.onkeydown = d.body.onkeydown = function(e) { e = e || window.event; k.innerHTML = e.keyCode || e.which; return false; }
 
 	</script>
 </body>
